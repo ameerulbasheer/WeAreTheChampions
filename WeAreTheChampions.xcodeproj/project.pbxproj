@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5E2FF75B2878354B00E0E388 /* TeamListCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E2FF75A2878354B00E0E388 /* TeamListCardView.swift */; };
+		5E2FF75D287838AD00E0E388 /* TeamListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E2FF75C287838AD00E0E388 /* TeamListView.swift */; };
+		5E2FF75F28783D7600E0E388 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E2FF75E28783D7600E0E388 /* Extensions.swift */; };
 		5E3B80AB287815BD0050DF0D /* WeAreTheChampionsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E3B80AA287815BD0050DF0D /* WeAreTheChampionsApp.swift */; };
 		5E3B80AD287815BD0050DF0D /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E3B80AC287815BD0050DF0D /* ContentView.swift */; };
 		5E3B80AF287815BF0050DF0D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5E3B80AE287815BF0050DF0D /* Assets.xcassets */; };
@@ -17,6 +20,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		5E2FF75A2878354B00E0E388 /* TeamListCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeamListCardView.swift; sourceTree = "<group>"; };
+		5E2FF75C287838AD00E0E388 /* TeamListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeamListView.swift; sourceTree = "<group>"; };
+		5E2FF75E28783D7600E0E388 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		5E3B80A7287815BD0050DF0D /* WeAreTheChampions.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WeAreTheChampions.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5E3B80AA287815BD0050DF0D /* WeAreTheChampionsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeAreTheChampionsApp.swift; sourceTree = "<group>"; };
 		5E3B80AC287815BD0050DF0D /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -58,8 +64,11 @@
 			isa = PBXGroup;
 			children = (
 				5E3B80AA287815BD0050DF0D /* WeAreTheChampionsApp.swift */,
+				5E2FF75E28783D7600E0E388 /* Extensions.swift */,
 				5E3B80AC287815BD0050DF0D /* ContentView.swift */,
 				5E3B80BA2878296C0050DF0D /* TeamDataViewModel.swift */,
+				5E2FF75A2878354B00E0E388 /* TeamListCardView.swift */,
+				5E2FF75C287838AD00E0E388 /* TeamListView.swift */,
 				5E3B80B8287821FB0050DF0D /* TeamDataModel.swift */,
 				5E3B80AE287815BF0050DF0D /* Assets.xcassets */,
 				5E3B80B0287815BF0050DF0D /* Preview Content */,
@@ -146,7 +155,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5E2FF75B2878354B00E0E388 /* TeamListCardView.swift in Sources */,
 				5E3B80AD287815BD0050DF0D /* ContentView.swift in Sources */,
+				5E2FF75D287838AD00E0E388 /* TeamListView.swift in Sources */,
+				5E2FF75F28783D7600E0E388 /* Extensions.swift in Sources */,
 				5E3B80BD28782A170050DF0D /* TestCases.swift in Sources */,
 				5E3B80B9287821FB0050DF0D /* TeamDataModel.swift in Sources */,
 				5E3B80AB287815BD0050DF0D /* WeAreTheChampionsApp.swift in Sources */,

@@ -57,7 +57,7 @@ struct ContentView: View {
                     })
                 } else {
                     // MARK: Fill Up Team details
-                    Text("List of teams")
+                    TeamListView(teams: teamDataVM.teams)
                 }
                 
                 
