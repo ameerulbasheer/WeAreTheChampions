@@ -11,6 +11,7 @@
 		5E3B80AD287815BD0050DF0D /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E3B80AC287815BD0050DF0D /* ContentView.swift */; };
 		5E3B80AF287815BF0050DF0D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5E3B80AE287815BF0050DF0D /* Assets.xcassets */; };
 		5E3B80B2287815BF0050DF0D /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5E3B80B1287815BF0050DF0D /* Preview Assets.xcassets */; };
+		5E3B80B9287821FB0050DF0D /* TeamDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E3B80B8287821FB0050DF0D /* TeamDataModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -19,6 +20,7 @@
 		5E3B80AC287815BD0050DF0D /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		5E3B80AE287815BF0050DF0D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		5E3B80B1287815BF0050DF0D /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		5E3B80B8287821FB0050DF0D /* TeamDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeamDataModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -53,6 +55,7 @@
 			children = (
 				5E3B80AA287815BD0050DF0D /* WeAreTheChampionsApp.swift */,
 				5E3B80AC287815BD0050DF0D /* ContentView.swift */,
+				5E3B80B8287821FB0050DF0D /* TeamDataModel.swift */,
 				5E3B80AE287815BF0050DF0D /* Assets.xcassets */,
 				5E3B80B0287815BF0050DF0D /* Preview Content */,
 			);
@@ -138,6 +141,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5E3B80AD287815BD0050DF0D /* ContentView.swift in Sources */,
+				5E3B80B9287821FB0050DF0D /* TeamDataModel.swift in Sources */,
 				5E3B80AB287815BD0050DF0D /* WeAreTheChampionsApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
