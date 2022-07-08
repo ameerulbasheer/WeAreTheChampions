@@ -20,7 +20,6 @@ struct TeamListView: View {
                 }
             }
         }
-        .frame(height: 85, alignment: .bottom)
         
     }
 }

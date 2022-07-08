@@ -58,10 +58,8 @@ struct ContentView: View {
                 } else {
                     // MARK: Fill Up Team details
                     TeamListView(teams: teamDataVM.teams)
+                        .frame(height: 200, alignment: .top)
                 }
-                
-                
-                
                 
                 // MARK: - Match Results Section
                 Section(content: {
