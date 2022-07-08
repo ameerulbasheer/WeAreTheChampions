@@ -9,9 +9,11 @@ import SwiftUI
 
 @main
 struct WeAreTheChampionsApp: App {
+    @StateObject var teamDataVM = TeamDataViewModel()
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .environmentObject(teamDataVM)
         }
     }
 }
