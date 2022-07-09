@@ -21,7 +21,7 @@ struct ContentView: View {
                     // MARK: - Team Input Section
                     Section(content: {
                         VStack {
-                            ExtractedView(teamInputText: $teamInputText)
+                            teamInputTextView(teamInputText: $teamInputText)
                             // MARK: Submit Button
                             Button {
                                 // MARK: Submit data
@@ -46,7 +46,8 @@ struct ContentView: View {
                 } else {
                     VStack {
                         // MARK: - List of Teams Section
-                        TeamListView(teams: teamDataVM.teams)
+                        TeamListView()
+                            .environmentObject(teamDataVM)
                             .frame(height: 200, alignment: .top)
                         
                         // MARK: Clear All Button
@@ -127,7 +128,7 @@ struct ContentView_Previews: PreviewProvider {
     }
 }
 
-struct ExtractedView: View {
+struct teamInputTextView: View {
     @Binding var teamInputText : String
     var body: some View {
         TextEditor(text: $teamInputText)

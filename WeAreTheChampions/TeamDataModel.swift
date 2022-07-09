@@ -7,13 +7,13 @@
 
 import Foundation
 
-class TeamData {
-    let id = UUID()
-    var name : String
-    var group : Int
-    var date : Date
-    var goalsScored : Int = 0
-    var matchPoints : Int = 0
+class TeamData: ObservableObject {
+    @Published var id = UUID()
+    @Published var name : String
+    @Published var group : Int
+    @Published var date : Date
+    @Published var goalsScored : Int = 0
+    @Published var matchPoints : Int = 0
     
     init(name: String, group: Int, dateString: String ) {
         self.name = name

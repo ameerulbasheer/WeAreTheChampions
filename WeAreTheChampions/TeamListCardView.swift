@@ -8,7 +8,8 @@
 import SwiftUI
 
 struct TeamListCardView: View {
-    @State var teamData : TeamData
+    @ObservedObject var teamData : TeamData
+
     var body: some View {
         HStack {
             VStack {
