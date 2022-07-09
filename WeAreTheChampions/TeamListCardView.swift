@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct TeamListCardView: View {
-    var teamData : TeamData
+    @State var teamData : TeamData
     var body: some View {
         HStack {
             VStack {
@@ -22,8 +22,9 @@ struct TeamListCardView: View {
                     .font(.subheadline)
                     .bold()
                     .lineLimit(1)
+                    .frame(width: 100)
                 // MARK: date registered
-                Text(teamData.date.formatted(.dateTime.month().day()))
+                Text(teamData.date.formatted(.dateTime.month().year(.twoDigits)))
                     .font(.footnote)
                     .opacity(0.7)
                     .lineLimit(1)

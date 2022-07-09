@@ -8,10 +8,10 @@
 import SwiftUI
 
 struct TeamListView: View {
-    var teams : [TeamData]
+    @State var teams : [TeamData]
     var body: some View {
         ScrollView() {
-            LazyVGrid(columns: [GridItem].init(repeating: GridItem(.flexible()), count: 3)) {
+            LazyVGrid(columns: [GridItem].init(repeating: GridItem(.flexible()), count: 2)) {
                 ForEach(teams, id: \.id) {team in
                     TeamListCardView(teamData: team)
                         .background(Color.systemBackground)

@@ -10,7 +10,7 @@ import SwiftUI
 struct ContentView: View {
     @EnvironmentObject var teamDataVM : TeamDataViewModel
     @State private var showTeamsInputHelp = false
-    @State private var teamInputText = ""
+    @State private var teamInputText: String = ""
     @State private var showMatchInputHelp = false
     @State private var matchInputText = ""
     
@@ -21,23 +21,11 @@ struct ContentView: View {
                     // MARK: - Team Input Section
                     Section(content: {
                         VStack {
-                            ZStack(alignment: .leading) {
-                                if teamInputText.isEmpty {
-                                    HStack {
-                                        Text("<Team A name> <Team A registration date in DD/MM> <Team A group number>")
-                                            .font(.caption)
-                                            .foregroundColor(.secondary)
-                                        Spacer()
-                                    }
-                                }
-                                TextEditor(text: $teamInputText)
-                                    .font(.caption)
-                                    .foregroundColor(.primary)
-                            }
+                            ExtractedView(teamInputText: $teamInputText)
                             // MARK: Submit Button
                             Button {
                                 // MARK: Submit data
-                                teamDataVM.teams = textToTeamsDataParser(teamInputText)
+                                teamDataVM.teams = textToTeamsDataParser($teamInputText.wrappedValue)
                             } label: {
                                 Text("Submit")
                             }
@@ -56,40 +44,70 @@ struct ContentView: View {
                         }
                     })
                 } else {
-                    // MARK: Fill Up Team details
-                    TeamListView(teams: teamDataVM.teams)
-                        .frame(height: 200, alignment: .top)
-                }
-                
-                // MARK: - Match Results Section
-                Section(content: {
-                    ZStack(alignment: .leading) {
-                        if matchInputText.isEmpty {
-                            HStack {
-                                Text("<Team A name> <Team B name> <Team A goals scored> <Team B goals scored>")
-                                    .font(.caption)
-                                    .foregroundColor(.secondary)
-                                Spacer()
-                            }
+                    VStack {
+                        // MARK: - List of Teams Section
+                        TeamListView(teams: teamDataVM.teams)
+                            .frame(height: 200, alignment: .top)
+                        
+                        // MARK: Clear All Button
+                        Button {
+                            teamDataVM.teams = []
+                        } label: {
+                            Text("Clear All")
                         }
-                        TextEditor(text: $matchInputText)
-                            .font(.caption)
-                            .foregroundColor(.primary)
                     }
                     
-                }, header: {
-                    HStack {
-                        Text("Enter Match Results here")
-                        Button {
-                            showMatchInputHelp = true
-                        } label: {
-                            Image(systemName: "info.circle")
+                    // MARK: - Match Results Section
+                    Section(content: {
+                        VStack {
+                            ZStack(alignment: .leading) {
+                                if matchInputText.isEmpty {
+                                    HStack {
+                                        Text("<Team A name> <Team B name> <Team A goals scored> <Team B goals scored>")
+                                            .font(.caption)
+                                            .foregroundColor(.secondary)
+                                        Spacer()
+                                    }
+                                }
+                                TextEditor(text: $matchInputText)
+                                    .font(.caption)
+                                    .foregroundColor(.primary)
+                                    .textInputAutocapitalization(.never)
+                                    .disableAutocorrection(true)
+                            }
+                            // MARK: Submit Button
+                            Button {
+                                // MARK: Submit data
+                                do {
+                                    try playMatches(matchInputText: $matchInputText.wrappedValue, teamData: teamDataVM)
+                                } catch  {
+                                    showMatchInputHelp = true
+                                }
+                                
+                            } label: {
+                                Text("Submit")
+                            }
+                            .alert(isPresented: $showMatchInputHelp) {
+                                Alert(title: Text("Input Format:"), message: Text("<Team A name> <Team B name> <Team A goals scored> <Team B goals scored>"), dismissButton: .default(Text("Okay")))
+                            }
                         }
-                    }
-                    .alert(isPresented: $showMatchInputHelp) {
-                        Alert(title: Text("Input Format:"), message: Text("<Team A name> <Team B name> <Team A goals scored> <Team B goals scored>"), dismissButton: .default(Text("Okay")))
-                    }
-                })
+                        
+                    }, header: {
+                        HStack {
+                            Text("Enter Match Results here")
+                            Button {
+                                showMatchInputHelp = true
+                            } label: {
+                                Image(systemName: "info.circle")
+                            }
+                        }
+                        .alert(isPresented: $showMatchInputHelp) {
+                            Alert(title: Text("Input Format:"), message: Text("<Team A name> <Team B name> <Team A goals scored> <Team B goals scored>"), dismissButton: .default(Text("Okay")))
+                        }
+                    })
+                }
+                
+                
             }
             .navigationTitle(teamDataVM.teams.isEmpty ? "Team Set-up" : "Teams")
         }
@@ -99,13 +117,23 @@ struct ContentView: View {
 struct ContentView_Previews: PreviewProvider {
     static var teamDataVM : TeamDataViewModel = {
         let teamDataVM = TeamDataViewModel()
-        teamDataVM.teams = textToTeamsDataParser(testCase01Teams)
+//        teamDataVM.teams = textToTeamsDataParser(testCase01Teams)
         return teamDataVM
     }()
-    
     
     static var previews: some View {
         ContentView()
             .environmentObject(teamDataVM)
+    }
+}
+
+struct ExtractedView: View {
+    @Binding var teamInputText : String
+    var body: some View {
+        TextEditor(text: $teamInputText)
+            .font(.caption)
+            .foregroundColor(.primary)
+            .disableAutocorrection(true)
+            .textInputAutocapitalization(.never)
     }
 }
