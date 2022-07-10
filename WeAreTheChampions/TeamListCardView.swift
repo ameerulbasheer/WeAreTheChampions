@@ -37,7 +37,7 @@ struct TeamListCardView: View {
 struct TeamListRowView_Previews: PreviewProvider {
     static var teamDataVM : TeamDataViewModel = {
         let teamDataVM = TeamDataViewModel()
-        teamDataVM.teams = textToTeamsDataParser(testCase01Teams)
+        teamDataVM.textToTeamsDataParser(testCase01Teams)
         return teamDataVM
     }()
     static var previews: some View {

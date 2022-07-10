@@ -18,7 +18,7 @@ struct ContentView: View {
         // MARK: Submit Button
         Button {
             // MARK: Submit data
-            teamDataVM.teams = textToTeamsDataParser($teamInputText.wrappedValue)
+            teamDataVM.textToTeamsDataParser(teamInputText)
         } label: {
             Text("Submit")
         }
@@ -50,6 +50,7 @@ struct ContentView: View {
                 .foregroundColor(.primary)
                 .disableAutocorrection(true)
                 .textInputAutocapitalization(.never)
+            
             submitTeamsButton
         }
     }
@@ -78,7 +79,7 @@ struct ContentView: View {
         Button {
             // MARK: Submit data
             do {
-                try playMatches(matchInputText: $matchInputText.wrappedValue, teamData: teamDataVM)
+                try teamDataVM.playMatches(matchInputText: matchInputText)
                 hasSubmittedMatches.toggle()
             } catch  {
                 showMatchInputHelp = true
@@ -124,17 +125,17 @@ struct ContentView: View {
                         // MARK: - Teams List Section
                         TeamListView(hasSubmittedMatches: $hasSubmittedMatches)
                             .environmentObject(teamDataVM)
-                            .frame(height: 480, alignment: .top)
+                            .frame(maxHeight: 420, alignment: .top)
                             .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
-                            .shadow(color: Color.primary.opacity(0.2), radius: 10, x: 0, y: 5)
+                        .shadow(color: Color.primary.opacity(0.2), radius: 10, x: 0, y: 5)
+                        .padding([.horizontal,.bottom])
                         
                         if hasSubmittedMatches {clearAllButton}
-                    }
-                    .padding(.bottom, 20)
-                    
-                    if !hasSubmittedMatches {
-                        // MARK: - Match Results Section
-                        matchesSection
+                        Spacer()
+                        if !hasSubmittedMatches {
+                            // MARK: - Match Results Section
+                            matchesSection
+                        }
                     }
                 }
             }
@@ -146,7 +147,7 @@ struct ContentView: View {
 struct ContentView_Previews: PreviewProvider {
     static var teamDataVM : TeamDataViewModel = {
         let teamDataVM = TeamDataViewModel()
-        teamDataVM.teams = textToTeamsDataParser(testCase01Teams)
+        teamDataVM.textToTeamsDataParser(testCase01Teams)
         return teamDataVM
     }()
     
