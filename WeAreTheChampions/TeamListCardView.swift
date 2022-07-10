@@ -18,7 +18,7 @@ struct TeamListCardView: View {
                 .bold()
                 .lineLimit(1)
             // MARK: name
-            Text(teamData.name)
+            Text("\(teamData.name) Group\(teamData.group)")
                 .font(.subheadline)
                 .bold()
                 .lineLimit(1)

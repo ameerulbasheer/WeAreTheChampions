@@ -15,6 +15,12 @@ class TeamData: ObservableObject {
     @Published var goalsScored : Int = 0
     @Published var matchPoints : Int = 0
     
+    @Published var matchResults = [
+        "draw" : 0,
+        "win" : 0,
+        "loss" : 0,
+    ]
+    
     init(name: String, group: Int, dateString: String ) {
         self.name = name
         self.group = group

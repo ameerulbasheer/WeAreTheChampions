@@ -113,33 +113,45 @@ struct ContentView: View {
             Text("Clear All")
         }
     }
+    private var titleText : String {
+        if isDataEmpty {
+            return "Team Set-up"
+        } else if hasSubmittedMatches {
+            return "Winning Teams"
+        }
+        else {
+            return "Teams"
+        }
+    }
     
     var body: some View {
         NavigationView {
-            VStack {
+            VStack(spacing: 20) {
                 if isDataEmpty {
                     // MARK: - Team Input Section
                     teamInputSection
                 } else {
-                    VStack {
-                        // MARK: - Teams List Section
-                        TeamListView(hasSubmittedMatches: $hasSubmittedMatches)
-                            .environmentObject(teamDataVM)
-                            .frame(maxHeight: 420, alignment: .top)
-                            .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+                    // MARK: - Teams List Section
+                    TeamListView(hasSubmittedMatches: $hasSubmittedMatches)
+                        .environmentObject(teamDataVM)
+                        .frame(height: 440, alignment: .top)
+                        .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
                         .shadow(color: Color.primary.opacity(0.2), radius: 10, x: 0, y: 5)
-                        .padding([.horizontal,.bottom])
-                        
-                        if hasSubmittedMatches {clearAllButton}
+                        .padding([.horizontal])
+                    
+                    if hasSubmittedMatches {
+                        clearAllButton
                         Spacer()
-                        if !hasSubmittedMatches {
-                            // MARK: - Match Results Section
-                            matchesSection
-                        }
                     }
+                    
+                    if !hasSubmittedMatches {
+                        // MARK: - Match Results Section
+                        matchesSection
+                    }
+                    
                 }
             }
-            .navigationTitle(isDataEmpty ? "Team Set-up" : "Teams")
+            .navigationTitle(titleText)
         }
     }
 }

@@ -11,7 +11,11 @@ struct TeamListView: View {
     @EnvironmentObject var teamDataVM : TeamDataViewModel
     @Binding var hasSubmittedMatches : Bool
     var teams : [TeamData]  {
-        return teamDataVM.teams
+        if !hasSubmittedMatches {
+            return teamDataVM.teams
+        } else {
+            return teamDataVM.winningTeams
+        }
     }
     var body: some View {
         ScrollView(showsIndicators: true) {
@@ -34,10 +38,12 @@ struct TeamListView_Previews: PreviewProvider {
     static var teamDataVM : TeamDataViewModel = {
         let teamDataVM = TeamDataViewModel()
         teamDataVM.textToTeamsDataParser(testCase01Teams)
+        do { try teamDataVM.playMatches(matchInputText: testCase01Matches) }
+        catch  { fatalError("Error loading testCases Matches") }
         return teamDataVM
     }()
     static var previews: some View {
-        TeamListView(hasSubmittedMatches: .constant(true))
+        TeamListView(hasSubmittedMatches: .constant(false))
             .environmentObject(teamDataVM)
             .previewLayout(.sizeThatFits)
     }
