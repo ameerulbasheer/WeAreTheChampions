@@ -9,11 +9,12 @@ import SwiftUI
 
 struct TeamListView: View {
     @EnvironmentObject var teamDataVM : TeamDataViewModel
+    @Binding var hasSubmittedMatches : Bool
     var teams : [TeamData]  {
         return teamDataVM.teams
     }
     var body: some View {
-        ScrollView() {
+        ScrollView(showsIndicators: true) {
             LazyVGrid(columns: [GridItem].init(repeating: GridItem(.flexible()), count: 2)) {
                 ForEach(teams, id: \.id) {team in
                     TeamListCardView(teamData: team)
@@ -23,9 +24,11 @@ struct TeamListView: View {
                         .shadow(color: Color.primary.opacity(0.2), radius: 10, x: 0, y: 5)
                 }
             }
+            .padding()
+            .background(Color.background)
         }
-        
     }
+    
 }
 
 struct TeamListView_Previews: PreviewProvider {
@@ -35,7 +38,7 @@ struct TeamListView_Previews: PreviewProvider {
         return teamDataVM
     }()
     static var previews: some View {
-        TeamListView()
+        TeamListView(hasSubmittedMatches: .constant(true))
             .environmentObject(teamDataVM)
             .previewLayout(.sizeThatFits)
     }
