@@ -16,7 +16,6 @@ final class TeamDataViewModel : ObservableObject {
     @Published var teams = [TeamData]()
     @Published var hasMatched = false
     
-    @Published var winningTeams = [TeamData]()
     
     func textToTeamsDataParser(_ input: String) {
         let teamDataStringArr = parseStringToData(input)
@@ -28,124 +27,6 @@ final class TeamDataViewModel : ObservableObject {
             }
         }
     }
-    
-    func playMatches(matchInputText input: String) throws {
-        let allMatches = try textToMatchDataParser(input)
-        for matchData in allMatches {
-            let teamA = Array(matchData)[0].key, teamB = Array(matchData)[1].key
-            let teamAScore = Array(matchData)[0].value, teamBScore = Array(matchData)[1].value
-            if let teamAData = self.teams.first(where: {$0.name == teamA}) {
-                teamAData.goalsScored += teamAScore
-                guard let result = teamAData.matchResults[giveMatchResult(yourScore: teamAScore, theirScore: teamBScore)] else {
-                    fatalError("Error accessing match result!")
-                }
-                teamAData.matchResults[giveMatchResult(yourScore: teamAScore, theirScore: teamBScore)] = result + 1
-            }
-            if let teamBData = self.teams.first(where: {$0.name == teamB}) {
-                teamBData.goalsScored += teamBScore
-                guard let result = teamBData.matchResults[giveMatchResult(yourScore: teamBScore, theirScore: teamAScore)] else {
-                    fatalError("Error accessing match result!")
-                }
-                teamBData.matchResults[giveMatchResult(yourScore: teamBScore, theirScore: teamAScore)] = result + 1
-            }
-        }
-//        Give matchPoints first
-        for team in self.teams {
-            team.matchPoints = giveMatchPoints(to: team, isAlternate: false)
-        }
-//        Find top 4 teams for each group
-        self.winningTeams = findWinningTeams(for: 1)
-        self.winningTeams += findWinningTeams(for: 2)
-    }
-    
-    func findWinningTeams(for groupNumber: Int) -> [TeamData] {
-        let highestTeams = self.teams
-            .filter({$0.group == groupNumber})
-            .filter({$0.matchPoints >= findLowestWinningMP(for: groupNumber)})
-            .sorted(by: {$0.matchPoints > $1.matchPoints})
-        if highestTeams.count == 4 {
-            return highestTeams
-        } else {
-            var highestTeamsArr = [[TeamData]].init(repeating: [], count: 4)
-            guard var currHighestMatchPoints = highestTeams.first?.matchPoints else {fatalError("Error accessing matchPoints!")}
-            var i = 0
-            // Get the arrays of tied teams
-            for team in highestTeams {
-                if team.matchPoints == currHighestMatchPoints {
-                    highestTeamsArr[i].append(team)
-                } else if team.matchPoints < currHighestMatchPoints {
-                    highestTeamsArr[i+1].append(team)
-                    currHighestMatchPoints = team.matchPoints
-                    i += 1
-                }
-            }
-            // MARK: Get only winning tied teams
-            for (index, teams) in highestTeamsArr.enumerated() where teams.count > 1 {
-                let winningTiedTeam = findHighestGoalsScored(from: teams)
-//                teams = []
-//                teams.append(winningTiedTeam)
-                highestTeamsArr[index] = [winningTiedTeam]
-            }
-            
-            var winningTeams = [TeamData]()
-            highestTeamsArr.forEach { team in
-                winningTeams.append(contentsOf: team)
-            }
-            return winningTeams
-        }
-    }
-    
-    private func findLowestWinningMP(for groupNumber: Int) -> Int {
-        let sortedTeams = self.teams.filter({$0.group == groupNumber}).sorted(by: {$0.matchPoints > $1.matchPoints})
-        guard var fourthHighestMP = sortedTeams.first?.matchPoints else {
-            fatalError("No teams recorded!")
-        }
-        var i = 1
-        var count = 1
-        while count < 4 && i < sortedTeams.count {
-            if sortedTeams[i].matchPoints < fourthHighestMP {
-                fourthHighestMP = sortedTeams[i].matchPoints
-                count += 1
-            }
-            i += 1
-        }
-        return fourthHighestMP
-    }
-    
-    private func findHighestGoalsScored(from teams: [TeamData]) -> TeamData {
-        guard let highestGoalsScored = teams.max(by: {$0.goalsScored > $1.goalsScored})?.goalsScored else {
-            fatalError("Error gtting alternate goalsScored!")
-        }
-        let highestGSTeams = teams.filter({$0.goalsScored == highestGoalsScored})
-        if highestGSTeams.count > 1 {
-            return findAltHighestMPTeam(from: highestGSTeams)
-        } else {
-            return highestGSTeams.first!
-        }
-    }
-    
-    private func findAltHighestMPTeam(from teams: [TeamData]) -> TeamData {
-        for team in teams {
-            team.matchPoints = giveMatchPoints(to: team, isAlternate: true)
-        }
-        guard let altHighestMP = teams.max(by: {$0.matchPoints > $1.matchPoints})?.matchPoints else {
-            fatalError("Error gtting alternate matchPoints!")
-        }
-        let altHighestMPTeams = teams.filter({$0.matchPoints == altHighestMP})
-        if altHighestMPTeams.count > 1 {
-            return findEarliestTeam(from: altHighestMPTeams)
-        } else {
-            return altHighestMPTeams.first!
-        }
-    }
-    
-    private func findEarliestTeam(from teams: [TeamData]) -> TeamData {
-        guard let earliestTeam = teams.min(by: {$0.date < $1.date}) else {
-            fatalError("Error getting earliest team!")
-        }
-        return earliestTeam
-    }
-    
     
     private func textToMatchDataParser(_ input: String) throws -> [[String : Int]] {
         //    Syntax: <Team A name> <Team B name> <Team A goals scored> <Team B goals scored>
@@ -188,5 +69,108 @@ final class TeamDataViewModel : ObservableObject {
             dataByColumn.append(line.components(separatedBy: " "))
         }
         return dataByColumn
+    }
+    
+    func playMatches(matchInputText input: String) throws {
+        let allMatches = try textToMatchDataParser(input)
+        for matchData in allMatches {
+            let teamA = Array(matchData)[0].key, teamB = Array(matchData)[1].key
+            let teamAScore = Array(matchData)[0].value, teamBScore = Array(matchData)[1].value
+            if let teamAData = self.teams.first(where: {$0.name == teamA}) {
+                teamAData.goalsScored += teamAScore
+                guard let result = teamAData.matchResults[giveMatchResult(yourScore: teamAScore, theirScore: teamBScore)] else {
+                    fatalError("Error accessing match result!")
+                }
+                teamAData.matchResults[giveMatchResult(yourScore: teamAScore, theirScore: teamBScore)] = result + 1
+            }
+            if let teamBData = self.teams.first(where: {$0.name == teamB}) {
+                teamBData.goalsScored += teamBScore
+                guard let result = teamBData.matchResults[giveMatchResult(yourScore: teamBScore, theirScore: teamAScore)] else {
+                    fatalError("Error accessing match result!")
+                }
+                teamBData.matchResults[giveMatchResult(yourScore: teamBScore, theirScore: teamAScore)] = result + 1
+            }
+        }
+        // Give matchPoints first
+        for team in self.teams {
+            team.matchPoints = giveMatchPoints(to: team, isAlternate: false)
+        }
+        // Find top 4 teams for each group
+        self.winningTeams = findWinningTeams(for: 1)
+        self.winningTeams += findWinningTeams(for: 2)
+    }
+    
+    // MARK: - Find Qualifying teams Section
+    @Published var winningTeams = [TeamData]()
+    
+    private func findWinningTeams(for group: Int) -> [TeamData] {
+        var currGroup = teams.filter({$0.group == group})
+        var winningTeamsInCurrGroup = [TeamData]()
+        while winningTeamsInCurrGroup.count < 4 {
+            findHighestMPTeams(teams: &currGroup, winningTeams: &winningTeamsInCurrGroup)
+        }
+        return winningTeamsInCurrGroup
+    }
+    
+    private func assignWinner(tiedTeams: [TeamData], teams: inout [TeamData], winningTeams: inout [TeamData]) {
+        for team in tiedTeams {
+            winningTeams.append(team)
+            teams = teams.filter({$0.name != team.name})
+        }
+    }
+    
+    private func findHighestMPTeams(teams: inout [TeamData], winningTeams: inout [TeamData]) {
+        if let highestAltMP = teams.max(by: {$0.matchPoints < $1.matchPoints})?.matchPoints {
+            let highestAltMPTeams = teams.filter({$0.matchPoints == highestAltMP})
+            if highestAltMPTeams.count <= (4 - winningTeams.count) {
+                assignWinner(tiedTeams: highestAltMPTeams, teams: &teams, winningTeams: &winningTeams)
+            } else {
+                // MARK: Second-level matching and so-on
+                findHighestGS(tiedTeams: highestAltMPTeams, teams: &teams, winningTeams: &winningTeams)
+            }
+        }
+    }
+    
+    private func findHighestGS(tiedTeams: [TeamData], teams: inout [TeamData], winningTeams: inout [TeamData]) {
+        if let highestGS = tiedTeams.max(by: {$0.goalsScored < $1.goalsScored})?.goalsScored {
+            let highestGSTeams = tiedTeams.filter({$0.goalsScored == highestGS})
+            if highestGSTeams.count <= (4 - winningTeams.count) {
+                assignWinner(tiedTeams: highestGSTeams, teams: &teams, winningTeams: &winningTeams)
+            } else {
+                // MARK: Alternate MP
+                findHighestAltMPTeams(tiedTeams: highestGSTeams, teams: &teams, winningTeams: &winningTeams)
+            }
+        }
+    }
+    
+    private func findHighestAltMPTeams(tiedTeams: [TeamData], teams: inout [TeamData], winningTeams: inout [TeamData]) {
+        // MARK: Give Alt scoring
+        for team in tiedTeams {
+            team.matchPoints = giveMatchPoints(to: team, isAlternate: true)
+        }
+        if let highestAltMP = tiedTeams.max(by: {$0.matchPoints < $1.matchPoints})?.matchPoints {
+            let highestAltMPTeams = tiedTeams.filter({$0.matchPoints == highestAltMP})
+            if highestAltMPTeams.count <= (4 - winningTeams.count) {
+                assignWinner(tiedTeams: highestAltMPTeams, teams: &teams, winningTeams: &winningTeams)
+            } else {
+                // MARK: Earliest Teams
+                findEarliestTeam(tiedTeams: highestAltMPTeams, teams: &teams, winningTeams: &winningTeams)
+            }
+        }
+    }
+    
+    private func findEarliestTeam(tiedTeams: [TeamData], teams: inout [TeamData], winningTeams: inout [TeamData]) {
+        if let earliestDate = tiedTeams.min(by: {$0.date > $1.date})?.date {
+            let earliestTeams = tiedTeams.filter({$0.date == earliestDate})
+            if earliestTeams.count <= (4 - winningTeams.count) {
+                assignWinner(tiedTeams: earliestTeams, teams: &teams, winningTeams: &winningTeams)
+            } else {
+                // MARK: Get first 4 elements
+                for team in earliestTeams.prefix(4) {
+                    winningTeams.append(team)
+                    teams = teams.filter({$0.name != team.name})
+                }
+            }
+        }
     }
 }
